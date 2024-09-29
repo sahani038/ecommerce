@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - TrendAura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #ff523b;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .order-summary h3 {
+            margin-top: 0;
+        }
+
+        .order-summary ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-summary li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            align-items: center;
+        }
+
+        .order-summary img {
+            width: 80px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .button {
+            background-color: #ff523b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background-color: #e04131;
+        }
+
+        .size-select {
+            width: auto;
+            padding: 5px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Checkout</h2>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Shipping Address:</label>
+                <input type="text" id="address" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" pattern="[0-9]{10}" placeholder="1234567890" required>
+                <small>Format: 7864539876</small>
+            </div>
+            <div class="form-group">
+                <label for="payment">Payment Method:</label>
+                <select id="payment" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="credit">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+            </div>
+            <button type="submit" class="button">Place Order</button>
+            <button type="button" class="button" id="cancelOrderButton">Cancel Order</button>
+        </form>
+
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <ul id="orderSummaryList"></ul>
+            <div>
+                <strong>Total: ₹<span id="totalAmount">0.00</span></strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load the cart items for the order summary
+        function loadOrderSummary() {
+            const orderSummaryList = document.getElementById('orderSummaryList');
+            const totalAmount = document.getElementById('totalAmount');
+            const cartItems = JSON.parse(localStorage.getItem('checkoutItem')) || [];
+
+            if (cartItems.length === 0) {
+                orderSummaryList.innerHTML = '<li>No items in cart.</li>';
+                totalAmount.textContent = '0.00';
+                return;
+            }
+
+            let total = 0;
+            cartItems.forEach((item, index) => {
+                total += item.price;
+                orderSummaryList.innerHTML += `
+                    <li>
+                        <img src="${item.image}" alt="${item.name}">
+                        <span>${item.name}</span>
+                        <span>₹${item.price.toFixed(2)}</span>
+                        <select class="size-select" data-index="${index}">
+                            <option value="S" ${item.size === 'S' ? 'selected' : ''}>S</option>
+                            <option value="M" ${item.size === 'M' ? 'selected' : ''}>M</option>
+                            <option value="L" ${item.size === 'L' ? 'selected' : ''}>L</option>
+                            <option value="XL" ${item.size === 'XL' ? 'selected' : ''}>XL</option>
+                        </select>
+                    </li>
+                `;
+            });
+
+            totalAmount.textContent = total.toFixed(2);
+
+            // Add event listeners to size selects
+            document.querySelectorAll('.size-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = this.getAttribute('data-index');
+                    const newSize = this.value;
+                    cartItems[index].size = newSize;
+                    localStorage.setItem('checkoutItem', JSON.stringify(cartItems));
+                });
+            });
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const payment = document.getElementById('payment').value;
+
+            const cartItems = JSON.parse(localStorage.getItem('checkoutItem')) || [];
+            if (cartItems.length > 0) {
+                const orderSummary = {
+                    id: Date.now().toString(),
+                    name: name,
+                    email: email,
+                    address: address,
+                    phone: phone,
+                    payment: payment,
+                    items: cartItems,
+                    total: totalAmount.textContent,
+                };
+
+                let orders = JSON.parse(localStorage.getItem('orders')) || [];
+                orders.push(orderSummary);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                alert('Order placed successfully!');
+                localStorage.removeItem('checkoutItem'); // Clear cart after order is placed
+                window.location.href = './account.html'; // Redirect to My Account page
+            } else {
+                alert('Your cart is empty.');
+            }
+        });
+
+        document.getElementById('cancelOrderButton').addEventListener('click', function() {
+            localStorage.removeItem('checkoutItem'); // Clear items from checkout
+            window.location.href = 'cart.html'; // Redirect to the cart page
+        });
+
+        document.addEventListener('DOMContentLoaded', loadOrderSummary);
+    </script>
+</body>
+
+</html>

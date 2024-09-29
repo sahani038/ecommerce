@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="shop.css">
+    <title>TrendAura Shop</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <img src="./image/T.png" alt="Trend Aura Logo">
+                </div>
+                <nav>
+                    <ul>
+                        <li class="Home"><a href="index.html"><i class="material-icons">home</i></a></li>
+                        <li><a href="#"><i class="material-icons">shopping_bag</i></a> </li>
+                        <li class="Account"><a href="#"><i class="material-icons">person</i></a></li>
+                        <li>
+                            <a href="cart.html"><i class="material-icons">shopping_cart</i></a>
+                        </li>
+                    </ul>
+                </nav>
+                <button class="menu-toggle" id="menuToggle">☰</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-window" id="navWindow">
+        <button class="close-nav" id="closeNav">&times;</button>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#"></a>Contact</a></li>
+            <li><a href="account.html"> My Account</a></li>
+            <li><a href="cart.html"> Cart</a></li>
+        </ul>
+    </div>
+
+   
+    <main class="container">
+        <section class="filters" id="filters">
+            <br>
+            <br>
+            <h2>Filters</h2>
+            <button class="close-filters" id="closeFilters" aria-label="Close filters">&times;</button>
+            <div class="filter-section">
+                <h3>Price Range</h3>
+                <input type="number" placeholder="Min" id="minPrice">
+                <input type="number" placeholder="Max" id="maxPrice">
+            </div>
+            <div class="filter-section">
+                <h3>Categories</h3>
+                <label><input type="checkbox" name="category" value="tops"> Tops</label>
+                <label><input type="checkbox" name="category" value="bottoms"> Bottoms</label>
+                <label><input type="checkbox" name="category" value="dresses"> Dresses</label>
+                <label><input type="checkbox" name="category" value="accessories"> Accessories</label>
+            </div>
+            <div class="filter-section">
+                <h3>Size</h3>
+                <label><input type="checkbox" name="size" value="xs"> XS</label>
+                <label><input type="checkbox" name="size" value="s"> S</label>
+                <label><input type="checkbox" name="size" value="m"> M</label>
+                <label><input type="checkbox" name="size" value="l"> L</label>
+                <label><input type="checkbox" name="size" value="xl"> XL</label>
+            </div>
+            <div class="filter-section">
+                <h3>Color</h3>
+                <label><input type="checkbox" name="color" value="black"> Black</label>
+                <label><input type="checkbox" name="color" value="white"> White</label>
+                <label><input type="checkbox" name="color" value="red"> Red</label>
+                <label><input type="checkbox" name="color" value="blue"> Blue</label>
+                <label><input type="checkbox" name="color" value="green"> Green</label>
+            </div>
+            <div class="filter-section">
+                <h3>Style</h3>
+                <label><input type="checkbox" name="style" value="casual"> Casual</label>
+                <label><input type="checkbox" name="style" value="formal"> Formal</label>
+                <label><input type="checkbox" name="style" value="sporty"> Sporty</label>
+                <label><input type="checkbox" name="style" value="bohemian"> Bohemian</label>
+            </div>
+            <button id="applyFilters">Apply Filters</button>
+        </section>
+        <section class="products">
+            <button id="filterToggle" aria-expanded="false" aria-controls="filters">Show Filters</button>
+            <h1>Shop Our Fashion Collection</h1>
+
+            <div class="product-grid" id="productGrid">
+                <div class="product">
+                    <h2>Product Name</h2>
+                    <p>Product Description</p>
+                    <input type="number" id="quantity" min="1" value="1">
+                    <button id="addToCart">Add to Cart</button>
+                    <p id="cartStatus">Cart: 0 items</p>
+                </div>
+
+                <!-- Products will be dynamically inserted here -->
+            </div>
+            <div class="loading" id="loading">Loading...</div>
+            <div class="next-page">
+                <button id="loadMore">Load More</button>
+            </div>
+            <div class="pagination" id="pagination">
+                <button id="prevPage" disabled>Prev</button>
+                <button id="nextPage">Next</button>
+            </div>
+        </section>
+    </main>
+    <script src="shop.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - TrendAura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            color: #ff523b;
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #ff523b;
+            color: white;
+        }
+
+        .sidebar ul li.active {
+            background-color: #ff523b;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #ff523b;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info img {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 2px solid #ff523b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            background-color: #ff523b;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+        }
+
+        .order-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-list li {
+            background: #f9f9f9;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-list img {
+            width: 80px;
+            height: auto;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .login-button,
+        .logout-button {
+            background-color: #ff523b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .login-button:hover,
+        .logout-button:hover {
+            background-color: #e04131;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>My Account</h2>
+            <ul>
+                <li class="active" onclick="showSection('profile')">Profile</li>
+                <li onclick="showSection('orders')">Orders</li>
+                <li onclick="showSection('addresses')">Addresses</li>
+                <li onclick="showSection('wishlist')">Wishlist</li>
+                <li onclick="showSection('settings')">Settings</li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>Profile Information</h2>
+            <div class="section active" id="profile">
+                <div class="profile-info">
+                    <img id="profilePic" src="https://via.placeholder.com/280" alt="Profile Picture">
+                    <h3 id="profileName"></h3>
+                    <p id="profileEmail"></p>
+                    <button id="authButton" class="login-button" onclick="handleAuthButton()">Log In</button>
+                </div>
+            </div>
+
+            <div class="section" id="orders">
+                <h2>Your Orders</h2>
+                <ul class="order-list" id="orderList"></ul>
+            </div>
+
+            <div class="section" id="addresses">
+                <h2>Your Addresses</h2>
+                <ul class="address-list">
+                    <li>123 Fashion St, Style City, Fashionland</li>
+                    <li>456 Trend Ave, Style City, Fashionland</li>
+                </ul>
+            </div>
+
+            <div class="section" id="wishlist">
+                <h2>Your Wishlist</h2>
+                <ul class="wishlist">
+                    <li>Stylish T-shirt</li>
+                    <li>Trendy Jeans</li>
+                    <li>Elegant Shoes</li>
+                </ul>
+            </div>
+
+            <div class="section" id="settings">
+                <h2>Settings</h2>
+                <p>Update your account settings here.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            const links = document.querySelectorAll('.sidebar ul li');
+            links.forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = Array.from(links).find(link => link.textContent.toLowerCase() === sectionId);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        function handleAuthButton() {
+            const firstName = localStorage.getItem('firstName');
+            const lastName = localStorage.getItem('lastName');
+            const authButton = document.getElementById('authButton');
+
+            if (firstName && lastName) {
+                localStorage.removeItem('firstName');
+                localStorage.removeItem('lastName');
+                localStorage.removeItem('email');
+                document.getElementById('profilePic').textContent = '';
+                document.getElementById('profileName').textContent = 'No user information available';
+                document.getElementById('profileEmail').textContent = '';
+                authButton.textContent = 'Log In';
+                alert('You have been logged out.');
+            } else {
+                window.location.href = 'signup.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('profile');
+
+            const firstName = localStorage.getItem('firstName') || '';
+            const lastName = localStorage.getItem('lastName') || '';
+            const email = localStorage.getItem('email') || '';
+
+            if (firstName && lastName) {
+                const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
+                document.getElementById('profilePic').textContent = initials;
+                document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('authButton').textContent = 'Log Out';
+            } else {
+                document.getElementById('profileName').textContent = 'No user information available';
+                document.getElementById('profileEmail').textContent = '';
+            }
+
+            // Load order summary
+            loadOrderSummary();
+        });
+
+        function loadOrderSummary() {
+            const orderList = document.getElementById('orderList');
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+            if (orders.length === 0) {
+                orderList.innerHTML = '<li>No orders found.</li>';
+                return;
+            }
+
+            // Clear current order list before loading
+            orderList.innerHTML = '';
+
+            orders.forEach(order => {
+                const deliveryTime = estimateDeliveryTime(); // Call function to estimate delivery time
+                orderList.innerHTML += `
+                    <li id="order-${order.id}">
+                        <img src="${order.items[0].image}" alt="${order.items[0].name}">
+                        <span>${order.items[0].name} - $${order.items[0].price.toFixed(2)}</span>
+                        <span>Estimated Delivery: ${deliveryTime}</span>
+                        <button onclick="cancelOrder('${order.id}')">Cancel Order</button>
+                    </li>
+                `;
+            });
+        }
+
+        function cancelOrder(orderId) {
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders = orders.filter(order => order.id !== orderId);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            loadOrderSummary();
+            alert('Order canceled successfully.');
+        }
+
+        // Function to estimate delivery time
+        function estimateDeliveryTime() {
+            const randomDays = Math.floor(Math.random() * 5) + 1; // Random delivery time between 1 to 5 days
+            return `${randomDays} day(s)`;
+        }
+
+        // Function to add order details from checkout
+        function addOrder(order) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            loadOrderSummary();
+        }
+    </script>
+
+</body>
+
+</html>
